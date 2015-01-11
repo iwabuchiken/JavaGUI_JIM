@@ -9,14 +9,21 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import jim.utils.CONS;
+
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class D_2 {
 
@@ -82,6 +89,60 @@ public class D_2 {
 //		Label lbl_Image = new Label(shell, SWT.NONE);
 		lbl_Image.setBounds(10, 70, 765, 795);
 		lbl_Image.setText("New Label");
+		
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+		
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText("&File");
+		
+		Menu menu_1 = new Menu(mntmFile);
+		mntmFile.setMenu(menu_1);
+		
+		MenuItem mntmLoadImage = new MenuItem(menu_1, SWT.NONE);
+		mntmLoadImage.setText("Load image");
+		
+		MenuItem mntmSaveImage = new MenuItem(menu_1, SWT.NONE);
+		mntmSaveImage.setText("Save image");
+		
+		MenuItem menuItem = new MenuItem(menu_1, SWT.SEPARATOR);
+		menuItem.setText("extra");
+		
+		new MenuItem(menu_1, SWT.SEPARATOR);
+		
+		MenuItem mi_Quit = new MenuItem(menu_1, SWT.NONE);
+		mi_Quit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				////////////////////////////////
+
+				// dialog
+
+				////////////////////////////////
+				//REF http://www.vogella.com/tutorials/EclipseDialogs/article.html
+				MessageBox dialog = 
+						  new MessageBox(D_2.this.shell, SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
+									dialog.setText(CONS.Strings.title_Confirm);
+									dialog.setMessage(CONS.Strings.msg_QuitApp);
+
+//						# open dialog and await user selection
+				int returnCode = dialog.open();
+
+
+				//REF return code http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fswt%2Fwidgets%2FMessageBox.html
+				if (returnCode == SWT.OK) {
+					
+					System.exit(0);
+					
+				}
+
+				
+			}
+		});
+		
+		mi_Quit.setText("&Quit");
+//		mi_Quit.setText("Quit");
 
 		////////////////////////////////
 
