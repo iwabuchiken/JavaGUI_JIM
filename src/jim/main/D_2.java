@@ -14,6 +14,7 @@ import jim.utils.CONS;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -24,6 +25,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class D_2 {
 
@@ -36,7 +40,7 @@ public class D_2 {
 	// views
 
 	////////////////////////////////
-	Label lbl_Image;
+	Label lbl_Image, lbl_FilePath, lbl_Width, lbl_Height, lbl_W_val, lbl_H_val;
 	
 	/**
 	 * Launch the application.
@@ -84,12 +88,19 @@ public class D_2 {
 //		shell = new Shell();
 		shell.setSize(1295, 945);
 		shell.setText("D_2");
-		
-		lbl_Image = new Label(shell, SWT.NONE);
-//		Label lbl_Image = new Label(shell, SWT.NONE);
-		lbl_Image.setBounds(10, 70, 765, 795);
-		lbl_Image.setText("New Label");
-		
+
+		////////////////////////////////
+
+		// labels
+
+		////////////////////////////////
+		_Create__Labels();
+
+		////////////////////////////////
+
+		// menues
+
+		////////////////////////////////
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
 		
@@ -142,8 +153,44 @@ public class D_2 {
 		});
 		
 		mi_Quit.setText("&Quit");
-//		mi_Quit.setText("Quit");
+		
+		Group gr_Controls = new Group(shell, SWT.BORDER | SWT.SHADOW_ETCHED_OUT);
+		gr_Controls.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		gr_Controls.setBounds(944, 30, 280, 90);
+		
+		Button bt_Quit = new Button(gr_Controls, SWT.NONE);
+		bt_Quit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				////////////////////////////////
 
+				// dialog
+
+				////////////////////////////////
+				//REF http://www.vogella.com/tutorials/EclipseDialogs/article.html
+				MessageBox dialog = 
+						  new MessageBox(D_2.this.shell, SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
+									dialog.setText(CONS.Strings.title_Confirm);
+									dialog.setMessage(CONS.Strings.msg_QuitApp);
+
+//						# open dialog and await user selection
+				int returnCode = dialog.open();
+
+
+				//REF return code http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fswt%2Fwidgets%2FMessageBox.html
+				if (returnCode == SWT.OK) {
+					
+					System.exit(0);
+					
+				}
+				
+			}
+		});
+		bt_Quit.setImage(SWTResourceManager.getImage("C:\\WORKS\\WS\\Eclipse_Luna2\\Java_GUI\\JIM\\image\\bt_quit.png"));
+		bt_Quit.setBounds(190, 15, 75, 64);
+		bt_Quit.setText("bt_Quit");
+		
 		////////////////////////////////
 
 		// image
@@ -154,18 +201,83 @@ public class D_2 {
 	}
 
 	private void 
+	_Create__Labels() {
+		// TODO Auto-generated method stub
+
+		Group gr_ImageData = new Group(shell, SWT.BORDER | SWT.SHADOW_OUT);
+		gr_ImageData.setBounds(950, 420, 290, 380);
+		
+
+		lbl_Image = new Label(shell, SWT.NONE);
+//		Label lbl_Image = new Label(shell, SWT.NONE);
+		lbl_Image.setBounds(10, 30, 900, 700);
+		lbl_Image.setText("New Label");
+
+		////////////////////////////////
+
+		// 
+
+		////////////////////////////////
+		lbl_FilePath = new Label(shell, SWT.NONE);
+		lbl_FilePath.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		lbl_FilePath.setBounds(30, 760, 800, 45);
+		lbl_FilePath.setText("lbl_FilePath");
+
+		lbl_Width = new Label(gr_ImageData, SWT.NONE);
+		lbl_Width.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		lbl_Width.setBounds(10, 21, 90, 27);
+		lbl_Width.setText("lbl_W");
+		
+		lbl_Height = new Label(gr_ImageData, SWT.NONE);
+		lbl_Height.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		lbl_Height.setBounds(10, 78, 90, 27);
+		lbl_Height.setText("lbl_H");
+		
+		lbl_W_val = new Label(gr_ImageData, SWT.NONE);
+		lbl_W_val.setBounds(121, 21, 90, 27);
+		lbl_W_val.setText("lbl_W_val");
+		
+		lbl_H_val = new Label(gr_ImageData, SWT.NONE);
+		lbl_H_val.setBounds(121, 78, 90, 27);
+		lbl_H_val.setText("lbl_H_val");
+//		mi_Quit.setText("Quit");
+
+	}
+
+	private void 
 	set_Image_to_Label() {
 		// TODO Auto-generated method stub
 		
 		String fpath_Image = "image/img_1.jpg";
+		
+		File f = new File(fpath_Image);
 
       Image image = null;
       try {
-        image = new Image(disp, new FileInputStream(fpath_Image));
+    	  
+        image = new Image(disp, new FileInputStream(f));
+//        image = new Image(disp, new FileInputStream(fpath_Image));
         
         this.lbl_Image.setImage(image);
 //        image.dispose();
         
+        ////////////////////////////////
+
+		// image data
+
+		////////////////////////////////
+        ImageData data = image.getImageData();
+        
+		int w = image.getImageData().width;
+		int h = image.getImageData().height;
+		
+		this.lbl_W_val.setText(String.valueOf(w));
+		this.lbl_H_val.setText(String.valueOf(h));
+		
+		this.lbl_FilePath.setText(f.getAbsolutePath());
+
+		
+		
       } catch (FileNotFoundException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
