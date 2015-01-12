@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 
@@ -16,7 +17,11 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
@@ -191,6 +196,21 @@ public class D_2 {
 		bt_Quit.setBounds(190, 15, 75, 64);
 		bt_Quit.setText("bt_Quit");
 		
+		Button bt_Choose = new Button(shell, SWT.NONE);
+		bt_Choose.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+//				DirFileSelection dfs = new DirFileSelection();	//=> Invalid thread access
+				
+				D_2.this.open_FileChooser();
+				
+				
+			}
+		});
+		bt_Choose.setBounds(850, 760, 80, 40);
+		bt_Choose.setText("Choose");
+		
 		////////////////////////////////
 
 		// image
@@ -199,6 +219,72 @@ public class D_2 {
 		this.set_Image_to_Label();
 		
 	}
+
+	protected void 
+	open_FileChooser() {
+		// TODO Auto-generated method stub
+		
+		String fileFilterPath = "image";
+		
+		FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
+
+		fileDialog.setFilterPath(fileFilterPath);
+		
+		fileDialog.setFilterExtensions(new String[]{"*.jpg", "*.jpeg", "*.png", "*.*"});
+		fileDialog.setFilterNames(new String[]{ "jpg format", "jpg format", "Any"});
+//		fileDialog.setFilterExtensions(new String[]{"*.rtf", "*.html", "*.*"});
+//		fileDialog.setFilterNames(new String[]{ "Rich Text Format", "HTML Document", "Any"});
+		
+		String firstFile = fileDialog.open();
+
+		if(firstFile != null) {
+			
+			fileFilterPath = fileDialog.getFilterPath();
+			
+			String[] selectedFiles = fileDialog.getFileNames();
+			
+			StringBuffer sb = new StringBuffer(
+									"Selected files under dir " 
+									+ fileDialog.getFilterPath() 
+									+ ": \n");
+			
+			for(int i=0; i<selectedFiles.length; i++) {
+			  
+			sb.append(selectedFiles[i] + "\n");
+			
+			}
+			
+			//log
+			String text, fname; int line_Num;
+			
+			text = String.format(Locale.JAPAN, "selectedFiles => %s\n", sb.toString());
+			
+			fname = Thread.currentThread().getStackTrace()[1].getFileName();
+			
+			line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+			
+			System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+			////////////////////////////////
+
+			// get: file
+
+			////////////////////////////////
+			File f = new File(fileFilterPath, selectedFiles[0]);
+			
+			////////////////////////////////
+
+			// set image
+
+			////////////////////////////////
+			this.set_Image_to_Label(f);
+			
+//          label.setText(sb.toString());
+			
+		}
+
+	}//open_FileChooser
+	
 
 	private void 
 	_Create__Labels() {
@@ -252,22 +338,22 @@ public class D_2 {
 		
 		File f = new File(fpath_Image);
 
-      Image image = null;
-      try {
-    	  
-        image = new Image(disp, new FileInputStream(f));
-//        image = new Image(disp, new FileInputStream(fpath_Image));
-        
-        this.lbl_Image.setImage(image);
-//        image.dispose();
-        
-        ////////////////////////////////
+    Image image = null;
+    try {
+  	  
+      image = new Image(disp, new FileInputStream(f));
+//      image = new Image(disp, new FileInputStream(fpath_Image));
+      
+      this.lbl_Image.setImage(image);
+//      image.dispose();
+      
+      ////////////////////////////////
 
 		// image data
 
 		////////////////////////////////
-        ImageData data = image.getImageData();
-        
+      ImageData data = image.getImageData();
+      
 		int w = image.getImageData().width;
 		int h = image.getImageData().height;
 		
@@ -278,10 +364,10 @@ public class D_2 {
 
 		
 		
-      } catch (FileNotFoundException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
+    } catch (FileNotFoundException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
 
 //		//REF http://www.java2s.com/Tutorial/Java/0280__SWT/LoadimagefromfileCreateaninputstreamandpasstheinputstreamtotheconstructor.htm
 //		Canvas canvas = new Canvas(shell, SWT.NONE);
@@ -337,89 +423,180 @@ public class D_2 {
 //		}
 		
 	}
+
+	private void 
+	set_Image_to_Label(File file_Image) {
+		// TODO Auto-generated method stub
+		
+//		String fpath_Image = "image/img_1.jpg";
+//		
+//		File f = new File(fpath_Image);
+		
+		File f = file_Image;
+		
+		Image image = null;
+		try {
+			
+			image = new Image(disp, new FileInputStream(f));
+//      image = new Image(disp, new FileInputStream(fpath_Image));
+			
+			this.lbl_Image.setImage(image);
+//      image.dispose();
+			
+			////////////////////////////////
+			
+			// image data
+			
+			////////////////////////////////
+			ImageData data = image.getImageData();
+			
+			int w = image.getImageData().width;
+			int h = image.getImageData().height;
+			
+			this.lbl_W_val.setText(String.valueOf(w));
+			this.lbl_H_val.setText(String.valueOf(h));
+			
+			this.lbl_FilePath.setText(f.getAbsolutePath());
+			
+			
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+//		//REF http://www.java2s.com/Tutorial/Java/0280__SWT/LoadimagefromfileCreateaninputstreamandpasstheinputstreamtotheconstructor.htm
+//		Canvas canvas = new Canvas(shell, SWT.NONE);
+//		
+//		 canvas.addPaintListener(new PaintListener() {
+//		      public void paintControl(PaintEvent e) {
+//		        Image image = null;
+//		        try {
+//		          image = new Image(disp, new FileInputStream(fpath_Image));
+//		        } catch (FileNotFoundException e1) {
+//		          // TODO Auto-generated catch block
+//		          e1.printStackTrace();
+//		        }
+//
+//		        e.
+//		        
+//		        e.gc.drawImage(image, 10, 10);
+//
+//		        image.dispose();
+//		      }
+//		    });
+		
+//		GC gc = new GC(canvas);
+//		
+//		Image image = null;
+//		
+//		try {
+//			
+//			image = new Image(disp, new FileInputStream(fpath_Image));
+//			
+//			gc.drawImage(image, 10, 10);
+//			
+//			image.dispose();
+//			
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+//		try {
+//			
+//			//REF http://www.coderanch.com/t/615221/GUI/java/jpg-image-viewer
+////			Image img = ImageIO.read(new File(fpath_Image));
+//			BufferedImage img = ImageIO.read(new File(fpath_Image));
+//
+////			Image img2 = (Image) img;
+//			
+////			this.lbl_Image.set
+//			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+	}
+	
 }
 
-//import org.eclipse.swt.SWT;
-//import org.eclipse.swt.widgets.Button;
-//import org.eclipse.swt.widgets.Display;
-//import org.eclipse.swt.widgets.Event;
-//import org.eclipse.swt.widgets.Label;
-//import org.eclipse.swt.widgets.Listener;
-//import org.eclipse.swt.widgets.Shell;
-//import org.eclipse.swt.widgets.Text;
-//
-//public class D_2 {
-////	public class DialogClass {
-//  static boolean deleteFlag = false;
-//
-//  public static void main(String[] args) {
-//    Display display = new Display();
-//    Shell shell = new Shell(display);
-//    shell.setText("Dialog Example");
-//    shell.setSize(300, 200);
-//    shell.open();
-//
-//    final Button button = new Button(shell, SWT.PUSH);
-//    button.setText("Delete File");
-//    button.setBounds(20, 40, 180, 25);
-//
-//    final Text text = new Text(shell, SWT.SHADOW_IN);
-//    text.setBounds(140, 40, 100, 25);
-//
-//    final Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL
-//        | SWT.DIALOG_TRIM);
-//    dialog.setText("Delete File");
-//    dialog.setSize(250, 150);
-//
-//    final Button buttonOK = new Button(dialog, SWT.PUSH);
-//    buttonOK.setText("OK");
-//    buttonOK.setBounds(20, 55, 80, 25);
-//
-//    Button buttonCancel = new Button(dialog, SWT.PUSH);
-//    buttonCancel.setText("Cancel");
-//    buttonCancel.setBounds(120, 55, 80, 25);
-//
-//    final Label label = new Label(dialog, SWT.NONE);
-//    label.setText("Delete the file?");
-//    label.setBounds(20, 15, 100, 20);
-//
-//    Listener listener = new Listener() {
-//      public void handleEvent(Event event) {
-//        if (event.widget == buttonOK) {
-//          deleteFlag = true;
-//        } else {
-//          deleteFlag = false;
-//        }
-//        dialog.close();
-//      }
-//    };
-//
-//    buttonOK.addListener(SWT.Selection, listener);
-//    buttonCancel.addListener(SWT.Selection, listener);
-//
-//    Listener buttonListener = new Listener() {
-//      public void handleEvent(Event event) {
-//        dialog.open();
-//      }
-//    };
-//
-//    button.addListener(SWT.Selection, buttonListener);
-//
-//    while (!dialog.isDisposed()) {
-//      if (!display.readAndDispatch())
-//        display.sleep();
-//    }
-//
-//    if (deleteFlag) {
-//      text.setText("File deleted.");
-//    } else {
-//      text.setText("File not deleted.");
-//    }
-//
-//    while (!shell.isDisposed()) {
-//      if (!display.readAndDispatch())
-//        display.sleep();
-//    }
-//    display.dispose();
-//  }
-//}
+class DirFileSelection {
+	  Display display = new Display();
+	  Shell shell = new Shell(display);
+	  
+	  // the label used to display selected dir/file.
+	  Label label;
+	  
+	  Button buttonSelectDir;
+	  Button buttonSelectFile;
+	  
+	  String selectedDir = "C:/WORKS/Downloads";
+//	  String selectedDir = "C:/WORKS";
+//	  String selectedDir;
+	  String fileFilterPath = "C:/WORKS/Downloads";
+//	  String fileFilterPath = "F:/jdk1.5";
+
+	  public DirFileSelection() {
+		  
+		////////////////////////////////
+
+		// shell
+
+		////////////////////////////////
+		shell.setSize(500, 500);
+		  
+		  
+	    label = new Label(shell, SWT.BORDER | SWT.WRAP);
+	    label.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+	    label.setText("Select a dir/file by clicking the buttons below.");
+	    
+	    buttonSelectDir = new Button(shell, SWT.PUSH);
+	    buttonSelectDir.setText("Select a directory");
+	    buttonSelectDir.addListener(SWT.Selection, new Listener() {
+	      public void handleEvent(Event event) {
+	        DirectoryDialog directoryDialog = new DirectoryDialog(shell);
+	        
+	        directoryDialog.setFilterPath(selectedDir);
+	        directoryDialog.setMessage("Please select a directory and click OK");
+	        
+	        String dir = directoryDialog.open();
+	        if(dir != null) {
+	          label.setText("Selected dir: " + dir);
+	          selectedDir = dir;
+	        }
+	      }
+	    });
+	    
+	    buttonSelectFile = new Button(shell, SWT.PUSH);
+	    buttonSelectFile.setText("Select a file/multiple files");
+	    buttonSelectFile.addListener(SWT.Selection, new Listener() {
+	      public void handleEvent(Event event) {
+	      }
+	    });
+	    
+	    label.setBounds(0, 0, 400, 60);
+	    buttonSelectDir.setBounds(0, 65, 200, 30);
+	    buttonSelectFile.setBounds(200, 65, 200, 30);
+
+	    shell.pack();
+	    shell.open();
+	    //textUser.forceFocus();
+
+	    // Set up the event loop.
+	    while (!shell.isDisposed()) {
+	      if (!display.readAndDispatch()) {
+	        // If no more entries in event queue
+	        display.sleep();
+	      }
+	    }
+
+	    display.dispose();
+	  }
+
+
+//	  public static void main(String[] args) {
+//	    new DirFileSelection();
+//	  }
+}
