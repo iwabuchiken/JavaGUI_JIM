@@ -237,6 +237,8 @@ public class ShellRGB extends Shell {
 			int w = image.getImageData().width;
 			int h = image.getImageData().height;
 			
+			int max_Pixel_Value = Methods.get_Max(pixData_R);
+			
 			GC gc = new GC(this.canvas);
 			
 			gc.setBackground(blue_light); 
@@ -263,9 +265,14 @@ public class ShellRGB extends Shell {
 			gc.setBackground(color);
 			gc.setForeground(color);
 			
+			int modified_Height;
+			
 			for (int i = 0; i < pixData_R.length; i++) {
 				
-				gc.drawLine(i, (canvas_H - pixData_R[i]), i, canvas_H);
+				modified_Height = (int) (canvas_H * ((float)pixData_R[i] / max_Pixel_Value));
+				
+				gc.drawLine(i, (canvas_H - modified_Height), i, canvas_H);
+//				gc.drawLine(i, (canvas_H - pixData_R[i]), i, canvas_H);
 //				gc.drawLine(i, 0, i, pixData_R[i]);
 				
 			}

@@ -177,4 +177,25 @@ public class Methods {
 		
 	}//get_PixData_R
 
+	public static int 
+	get_Max(int[] pixData_R) {
+		
+		int len = pixData_R.length;
+		
+		int max = -1;
+		
+		for (int i = 0; i < len; i++) {
+			
+			if (max < pixData_R[i]) {
+				
+				max = pixData_R[i];
+				
+			}
+			
+		}
+		
+		return max;
+		
+	}//get_Max
+
 }//public class Methods
