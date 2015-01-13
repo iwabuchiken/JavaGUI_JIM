@@ -1,5 +1,8 @@
 package jim.main;
 
+import java.awt.MouseInfo;
+import java.awt.PointerInfo;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.PaintEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,6 +33,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Group;
@@ -44,6 +52,8 @@ public class D_5 {
 
 	// ID for new shells
 	int numOf_Shells = 1;
+
+	Image image = null;
 	
 	////////////////////////////////
 
@@ -74,7 +84,21 @@ public class D_5 {
 	public void open() {
 		disp = Display.getDefault();
 //		Display display = Display.getDefault();
+		
+		////////////////////////////////
+
+		// contents
+
+		////////////////////////////////
 		createContents();
+		
+		////////////////////////////////
+
+		// listeners
+
+		////////////////////////////////
+		this.set_Listeners();
+		
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -84,6 +108,238 @@ public class D_5 {
 			}
 		}
 	}
+
+	private void 
+	set_Listeners() {
+		// TODO Auto-generated method stub
+		
+		////////////////////////////////
+
+		// listener
+
+		////////////////////////////////
+		KeyListener k = new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				PointerInfo a = MouseInfo.getPointerInfo();
+				
+				java.awt.Point b = a.getLocation();
+				int x = (int) b.getX();
+				int y = (int) b.getY();
+				
+				//log
+				String text, fname; int line_Num;
+				
+				text = String.format(Locale.JAPAN, "x = %d, y = %d\n", x, y);
+				
+				fname = Thread.currentThread().getStackTrace()[1].getFileName();
+				
+				line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+				
+				System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+
+		//REF http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/MouseListenerExample.htm
+		MouseListener m = new MouseListener() {
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// TODO Auto-generated method stub
+			
+				//log
+				String text, fname; int line_Num;
+				
+				text = String.format(Locale.JAPAN, "mouse.x = %d, mouse.y = %d\n", e.x, e.y);
+				
+				fname = Thread.currentThread().getStackTrace()[1].getFileName();
+				
+				line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+				
+				System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+		
+		MouseTrackListener mtl = new MouseTrackListener() {
+
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExit(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseHover(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+				//log
+				String text, fname; int line_Num;
+				
+				text = String.format(Locale.JAPAN, "mouse.x = %d, mouse.y = %d\n", e.x, e.y);
+				
+				fname = Thread.currentThread().getStackTrace()[1].getFileName();
+				
+				line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+				
+				System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+				
+			}
+			
+		};
+
+		//REF http://stackoverflow.com/questions/22197551/giving-a-label-highlight-effect-java-swt answered Mar 5 '14 at 12:31
+		Listener mouseHover = new Listener()
+	    {
+	        @Override
+	        public void handleEvent(Event e)
+	        {
+	        	
+	        	//log
+	        	String text = null, fname = null; int line_Num = 0;
+
+	        	switch(e.type) {
+	        	
+	        	case SWT.MouseEnter:
+	        		
+	        		text = String.format(Locale.JAPAN, 
+	        					"[%d, %d] e.type => MouseEnter(%d)\n", 
+	        					e.x, e.y, e.type);
+	        		
+	        		fname = Thread.currentThread().getStackTrace()[1].getFileName();
+	        		
+	        		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+	        		
+	        		break;
+	        		
+	        	case SWT.MouseExit:
+	        		
+	        		text = String.format(Locale.JAPAN, 
+        					"[%d, %d] e.type => MouseExit(%d)\n", 
+        					e.x, e.y, e.type);
+	        		
+	        		fname = Thread.currentThread().getStackTrace()[1].getFileName();
+	        		
+	        		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+	        		
+	        		break;
+	        		
+	        	case SWT.MouseHover:
+	        		
+	        		text = String.format(Locale.JAPAN, 
+        					"[%d, %d] e.type => MouseHover(%d)\n", 
+        					e.x, e.y, e.type);
+	        		
+	        		fname = Thread.currentThread().getStackTrace()[1].getFileName();
+	        		
+	        		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+	        		
+	        		break;
+	        		
+	        	}
+				
+				
+				System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+//	            hovering = e.type == SWT.MouseEnter;
+//	            label.redraw();
+	        }
+	    };
+
+	    MouseMotionListener mml = new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(java.awt.event.MouseEvent e) {
+				// TODO Auto-generated method stub
+
+				//log
+				String text, fname; int line_Num;
+				
+				text = String.format(Locale.JAPAN, 
+							"[dragged] mouse.x = %d, mouse.y = %d\n", 
+							e.getPoint().x, e.getPoint().y);
+				
+				fname = Thread.currentThread().getStackTrace()[1].getFileName();
+				
+				line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+				
+				System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+				
+			}
+
+			@Override
+			public void mouseMoved(java.awt.event.MouseEvent e) {
+				// TODO Auto-generated method stub
+
+				//log
+				String text, fname; int line_Num;
+				
+				text = String.format(Locale.JAPAN, 
+							"[moved] mouse.x = %d, mouse.y = %d\n", 
+							e.getPoint().x, e.getPoint().y);
+				
+				fname = Thread.currentThread().getStackTrace()[1].getFileName();
+				
+				line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+				
+				System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+			}
+	    	
+	    	
+	    	
+	    };
+	    
+		////////////////////////////////
+
+		// label: Image
+
+		////////////////////////////////
+//		this.lbl_Image.addKeyListener(k);
+		
+//		this.lbl_Image.addMouseListener(m);
+		
+//		this.lbl_Image.addMouseTrackListener(mtl);
+		this.lbl_Image.addListener(SWT.MouseHover, mouseHover);
+		this.lbl_Image.addListener(SWT.MouseEnter, mouseHover);
+		this.lbl_Image.addListener(SWT.MouseExit, mouseHover);
+		
+		//REF http://stackoverflow.com/questions/24691217/swt-mousemove-events-not-fired-while-dragging
+//		this.lbl_Image.addDragDetectListener(ddl);
+//		this.lbl_Image.addMouseMotionListener(mml);
+		
+		
+	}//set_Listeners
 
 	/**
 	 * Create contents of the window.
@@ -391,7 +647,7 @@ public class D_5 {
 		gr_ImageData.setBounds(950, 420, 290, 380);
 		
 
-		lbl_Image = new Label(shell, SWT.NONE);
+		lbl_Image = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
 //		Label lbl_Image = new Label(shell, SWT.NONE);
 		lbl_Image.setBounds(10, 30, 900, 700);
 		lbl_Image.setText("New Label");
@@ -435,57 +691,58 @@ public class D_5 {
 		
 		File f = new File(fpath_Image);
 
-    Image image = null;
-    try {
-  	  
-      image = new Image(disp, new FileInputStream(f));
-//      image = new Image(disp, new FileInputStream(fpath_Image));
-      
-      this.lbl_Image.setImage(image);
-//      image.dispose();
-      
-      ////////////////////////////////
-
-		// image data
-
-		////////////////////////////////
-      ImageData data = image.getImageData();
-      
-		int w = image.getImageData().width;
-		int h = image.getImageData().height;
+		image = null;
 		
-		this.lbl_W_val.setText(String.valueOf(w));
-		this.lbl_H_val.setText(String.valueOf(h));
-		
-		this.lbl_FilePath.setText(f.getAbsolutePath());
-
-		
-		
-    } catch (FileNotFoundException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
+		try {
+	  	  
+			image = new Image(disp, new FileInputStream(f));
+	//	  image = new Image(disp, new FileInputStream(fpath_Image));
+			
+			this.lbl_Image.setImage(image);
+	//	  image.dispose();
+			
+			////////////////////////////////
+	
+			// image data
+	
+			////////////////////////////////
+			ImageData data = image.getImageData();
+			
+			int w = image.getImageData().width;
+			int h = image.getImageData().height;
+			
+			this.lbl_W_val.setText(String.valueOf(w));
+			this.lbl_H_val.setText(String.valueOf(h));
+			
+			this.lbl_FilePath.setText(f.getAbsolutePath());
+	
+			
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 //		//REF http://www.java2s.com/Tutorial/Java/0280__SWT/LoadimagefromfileCreateaninputstreamandpasstheinputstreamtotheconstructor.htm
 //		Canvas canvas = new Canvas(shell, SWT.NONE);
 //		
 //		 canvas.addPaintListener(new PaintListener() {
-//		      public void paintControl(PaintEvent e) {
-//		        Image image = null;
-//		        try {
-//		          image = new Image(disp, new FileInputStream(fpath_Image));
-//		        } catch (FileNotFoundException e1) {
-//		          // TODO Auto-generated catch block
-//		          e1.printStackTrace();
-//		        }
+//			  public void paintControl(PaintEvent e) {
+//				Image image = null;
+//				try {
+//				  image = new Image(disp, new FileInputStream(fpath_Image));
+//				} catch (FileNotFoundException e1) {
+//				  // TODO Auto-generated catch block
+//				  e1.printStackTrace();
+//				}
 //
-//		        e.
-//		        
-//		        e.gc.drawImage(image, 10, 10);
+//				e.
+//				
+//				e.gc.drawImage(image, 10, 10);
 //
-//		        image.dispose();
-//		      }
-//		    });
+//				image.dispose();
+//			  }
+//			});
 		
 //		GC gc = new GC(canvas);
 //		
@@ -531,7 +788,8 @@ public class D_5 {
 		
 		File f = file_Image;
 		
-		Image image = null;
+		image = null;
+		
 		try {
 			
 			image = new Image(disp, new FileInputStream(f));
