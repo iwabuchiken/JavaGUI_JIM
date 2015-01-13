@@ -1,5 +1,8 @@
 package jim.main;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Locale;
 
 import jim.utils.CONS;
@@ -15,6 +18,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Canvas;
 
@@ -34,6 +39,8 @@ public class ShellRGB extends Shell {
 	Color red, blue, blue_light, burlywood2, green, yellow, white, black;
 
 	private int numOf_Shells;
+
+	private Display disp;
 
 	/**
 	 * Launch the application.
@@ -149,6 +156,13 @@ public class ShellRGB extends Shell {
 		////////////////////////////////
 		this.numOf_Shells = numOf_Shells;
 		
+		////////////////////////////////
+
+		// display
+
+		////////////////////////////////
+		this.disp = Display.getCurrent();
+		
 	}
 
 	/**
@@ -189,25 +203,59 @@ public class ShellRGB extends Shell {
 
 	void draw_RGB() {
 		
-		GC gc = new GC(this.canvas);
-		
-//		gc.setForeground(display.getSystemColor(SWT.COLOR_CYAN)); 
-		
-		//REF http://stackoverflow.com/questions/50064/setting-colors-in-swt answered Sep 8 '08 at 16:49
-//		Device device = Display.getCurrent ();
-//		Color red = new Color (device, 255, 0, 0);
-		
-//		gc.setBackground(this.burlywood2); 
-		gc.setBackground(blue_light); 
-		
-		//REF http://www.java2s.com/Tutorial/Java/0300__SWT-2D-Graphics/DrawingPointsLinesandsetlinewidth.htm
-		gc.setLineWidth(CONS.Views.lineWidth_Rect);
-		
-//		gc.fillRectangle(x, y, w, h);
-		gc.drawRectangle(10, 10, 100, 100);
-		
-		gc.dispose();
+		////////////////////////////////
 
+		// image
+
+		////////////////////////////////
+		String fpath_Image = this.file_Path;
+		
+		File f = new File(fpath_Image);
+
+		Image image = null;
+		
+		try {
+	  	  
+			image = new Image(this.disp, new FileInputStream(f));
+			
+			////////////////////////////////
+	
+			// image data
+	
+			////////////////////////////////
+			ImageData data = image.getImageData();
+			
+			int[] pixData_R = Methods.get_PixData_R(image);
+			
+			int w = image.getImageData().width;
+			int h = image.getImageData().height;
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		
+//		GC gc = new GC(this.canvas);
+//		
+////		gc.setForeground(display.getSystemColor(SWT.COLOR_CYAN)); 
+//		
+//		//REF http://stackoverflow.com/questions/50064/setting-colors-in-swt answered Sep 8 '08 at 16:49
+////		Device device = Display.getCurrent ();
+////		Color red = new Color (device, 255, 0, 0);
+//		
+////		gc.setBackground(this.burlywood2); 
+//		gc.setBackground(blue_light); 
+//		
+//		//REF http://www.java2s.com/Tutorial/Java/0300__SWT-2D-Graphics/DrawingPointsLinesandsetlinewidth.htm
+//		gc.setLineWidth(CONS.Views.lineWidth_Rect);
+//		
+////		gc.fillRectangle(x, y, w, h);
+//		gc.drawRectangle(10, 10, 100, 100);
+//		
+//		gc.dispose();
+//
+//		
 		
 	}
 
@@ -236,5 +284,4 @@ public class ShellRGB extends Shell {
 		
 	}//_init_Colors
 
-	
 }

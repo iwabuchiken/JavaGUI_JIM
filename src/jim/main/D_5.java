@@ -692,6 +692,7 @@ public class D_5 {
 		
 		// update numOf_Shells
 		numOf_Shells ++;
+
 		
 		sh.draw_RGB();
 		
