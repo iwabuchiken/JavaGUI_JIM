@@ -17,10 +17,13 @@ import jim.utils.CONS;
 import jim.utils.Methods;
 
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -60,7 +63,11 @@ public class D_5 {
 	// views
 
 	////////////////////////////////
-	Label lbl_Image, lbl_FilePath, lbl_Width, lbl_Height, lbl_W_val, lbl_H_val;
+	Label lbl_Image, lbl_FilePath, lbl_Width, 
+			lbl_Height, lbl_W_val, lbl_H_val,
+			
+			lbl_R_value, lbl_G_value, lbl_B_value,
+			lbl_R, lbl_G, lbl_B;
 	
 	/**
 	 * Launch the application.
@@ -264,6 +271,8 @@ public class D_5 {
 	        		
 	        		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
 	        		
+	        		D_5.this.show_RGB_values(e.x, e.y);
+	        		
 	        		break;
 	        		
 	        	}
@@ -340,6 +349,128 @@ public class D_5 {
 		
 		
 	}//set_Listeners
+
+	protected void 
+	show_RGB_values(int x, int y) {
+		// TODO Auto-generated method stub
+
+		ImageData data = image.getImageData();
+
+		int w_Image = data.width;
+		int h_Image = data.height;
+		
+		//log
+		String text, fname; int line_Num;
+		
+		text = String.format(Locale.JAPAN, 
+						"x = %d / y = %d / w_Image = %d / h_Image = %d\n", 
+						x, y, w_Image, h_Image);
+		
+		fname = Thread.currentThread().getStackTrace()[1].getFileName();
+		
+		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+		
+		System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+		
+		////////////////////////////////
+
+		// judge
+
+		////////////////////////////////
+		int half_Y1 = this.lbl_Image.getSize().y / 2;
+		
+		int half_Y2 = h_Image / 2;
+		
+		boolean lessThan_Height = y < (half_Y1 + half_Y2);
+		boolean moreThan_BeginningHeight = y > (half_Y1 - half_Y2);
+		
+		boolean within = false;
+		
+		if (x < w_Image 
+				&& lessThan_Height 
+				&& moreThan_BeginningHeight) {
+			
+			//log
+			text = String.format(Locale.JAPAN, "within image boundary\n");
+			
+			fname = Thread.currentThread().getStackTrace()[1].getFileName();
+			
+			line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+			
+			System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+			within = true;
+			
+		} else {
+			
+			//log
+			text = String.format(Locale.JAPAN, "out of image boundary\n");
+			
+			fname = Thread.currentThread().getStackTrace()[1].getFileName();
+			
+			line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+			
+			System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+			
+			within = false;
+			
+		}
+		
+		////////////////////////////////
+
+		// set: rgb values
+
+		////////////////////////////////
+		int offset_Y = - 1 * half_Y2;
+		
+		if (within) {
+			
+			int pixelValue = -1;
+			
+			try {
+				
+				pixelValue = data.getPixel(x, y + offset_Y);
+//				pixelValue = data.getPixel(x, y);
+				
+			} catch (Exception e) {
+
+				e.printStackTrace();
+				
+				return;
+				
+			}
+			
+			if (pixelValue != -1) {
+				
+				PaletteData palette = data.palette; 
+				
+				RGB rgb = palette.getRGB(pixelValue);
+				
+				this.lbl_R_value.setText(String.valueOf(rgb.red));
+				this.lbl_G_value.setText(String.valueOf(rgb.green));
+				this.lbl_B_value.setText(String.valueOf(rgb.blue));
+				
+			}
+			
+		}
+		
+		
+		
+		
+//		//log
+//		String text, fname; int line_Num;
+//		
+//		text = String.format(Locale.JAPAN, "r = %d, g = %d, b = %d\n", rgb.red, rgb.green, rgb.blue);
+//		
+//		fname = Thread.currentThread().getStackTrace()[1].getFileName();
+//		
+//		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+//		
+//		System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+	}//show_RGB_values
+	
 
 	/**
 	 * Create contents of the window.
@@ -647,7 +778,11 @@ public class D_5 {
 		gr_ImageData.setBounds(950, 420, 290, 380);
 		
 
+//		lbl_Image = new Label(shell, SWT.BORDER | SWT.SHADOW_IN | SWT.RIGHT);
 		lbl_Image = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
+//		lbl_Image = new Label(shell, SWT.SHADOW_IN);
+//		lbl_Image = new Label(shell, SWT.BORDER);
+		lbl_Image.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
 //		Label lbl_Image = new Label(shell, SWT.NONE);
 		lbl_Image.setBounds(10, 30, 900, 700);
 		lbl_Image.setText("New Label");
@@ -679,6 +814,33 @@ public class D_5 {
 		lbl_H_val = new Label(gr_ImageData, SWT.NONE);
 		lbl_H_val.setBounds(121, 78, 90, 27);
 		lbl_H_val.setText("lbl_H_val");
+		
+		lbl_R = new Label(gr_ImageData, SWT.NONE);
+		lbl_R.setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+		lbl_R.setBounds(10, 133, 90, 27);
+		lbl_R.setText("R");
+		
+		lbl_R_value = new Label(gr_ImageData, SWT.NONE);
+		lbl_R_value.setBounds(121, 133, 90, 27);
+		lbl_R_value.setText("0");
+		
+		lbl_G = new Label(gr_ImageData, SWT.NONE);
+		lbl_G.setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+		lbl_G.setBounds(10, 193, 90, 27);
+		lbl_G.setText("G");
+		
+		lbl_G_value = new Label(gr_ImageData, SWT.NONE);
+		lbl_G_value.setBounds(121, 193, 90, 27);
+		lbl_G_value.setText("0");
+		
+		lbl_B = new Label(gr_ImageData, SWT.NONE);
+		lbl_B.setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+		lbl_B.setBounds(10, 254, 90, 27);
+		lbl_B.setText("B");
+		
+		lbl_B_value = new Label(gr_ImageData, SWT.NONE);
+		lbl_B_value.setBounds(121, 254, 90, 27);
+		lbl_B_value.setText("0");
 //		mi_Quit.setText("Quit");
 
 	}
@@ -700,6 +862,11 @@ public class D_5 {
 			
 			this.lbl_Image.setImage(image);
 	//	  image.dispose();
+			
+			this.lbl_Image.setAlignment(SWT.BOTTOM);
+//			this.lbl_Image.setAlignment(SWT.TOP);
+//			this.lbl_Image.setAlignment(SWT.RIGHT|SWT.TOP);	//=> working
+//			this.lbl_Image.setAlignment(SWT.LEFT|SWT.TOP);
 			
 			////////////////////////////////
 	
