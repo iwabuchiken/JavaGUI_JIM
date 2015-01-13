@@ -3,6 +3,8 @@ package jim.utils;
 import java.io.File;
 import java.util.Locale;
 
+import jim.utils.CONS.Admin.RGBNames;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -75,29 +77,32 @@ public class Methods {
 	}//get_Point(int numOf_Shells)
 
 	public static int[] 
-	get_PixData_R(Image image) {
+	get_PixData_R(Image image, RGBNames rgb_Name) {
 		// TODO Auto-generated method stub
-		
+
+		////////////////////////////////
+
+		// prep: data
+
+		////////////////////////////////
 		ImageData data = image.getImageData();
 		
 		int w_Image = data.width;
 		int h_Image = data.height;
 
-		//log
-		String text, fname; int line_Num;
-		
-		text = String.format(Locale.JAPAN, "image width = %d, image height = %d\n", w_Image, h_Image);
-		
-		fname = Thread.currentThread().getStackTrace()[1].getFileName();
-		
-		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
-		
-		System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
-
-		
 		int[] pixels = new int[w_Image];
 		
 		data.getPixels(0, 0, w_Image, pixels, 0);
+
+		PaletteData palette = null;
+		RGB rgb = null;
+		
+		int limit = 50;
+		
+		int count = 0;
+		
+		//log
+		String text, fname; int line_Num;
 		
 		//log
 		text = String.format(Locale.JAPAN, "pixels.length = %d\n", pixels.length);
@@ -108,13 +113,12 @@ public class Methods {
 		
 		System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
 
-		
-		PaletteData palette = null;
-		RGB rgb = null;
-		
-		int limit = 200;
-		
-		int count = 0;
+		////////////////////////////////
+
+		// get: pixel value array
+
+		////////////////////////////////
+		int pixels_Values[] = new int[pixels.length];
 		
 		for (int i = 0; i < pixels.length; i++) {
 			
@@ -122,10 +126,30 @@ public class Methods {
 			
 			rgb = palette.getRGB(pixels[i]);
 			
+			////////////////////////////////
+
+			// get: values
+
+			////////////////////////////////
+			switch(rgb_Name) {
+			
+			case RED: pixels_Values[rgb.red] ++; break;
+			case GREEN: pixels_Values[rgb.green] ++; break;
+			case BLUE: pixels_Values[rgb.blue] ++; break;
+			
+			}
+			
+		}
+		
+		////////////////////////////////
+
+		// report
+
+		////////////////////////////////
+		for (int i = 0; i < pixels_Values.length; i++) {
+			
 			//log
-			text = String.format(Locale.JAPAN, 
-						"pixels[%d] => r = %d, g = %d, b = %d\n", 
-						i, rgb.red, rgb.green, rgb.blue);
+			text = String.format(Locale.JAPAN, "pixels_R[%d] => %d\n", i, pixels_Values[i]);
 			
 			fname = Thread.currentThread().getStackTrace()[1].getFileName();
 			
@@ -133,10 +157,15 @@ public class Methods {
 			
 			System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
 
-//			// limitter
+			
+//			////////////////////////////////
+//
+//			// limit
+//
+//			////////////////////////////////
 //			count ++;
 //			
-//			if (count >= limit) {
+//			if (count > limit) {
 //				
 //				break;
 //				
@@ -144,7 +173,7 @@ public class Methods {
 			
 		}
 		
-		return null;
+		return pixels_Values;
 		
 	}//get_PixData_R
 

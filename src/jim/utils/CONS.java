@@ -21,74 +21,15 @@ public class CONS {
 
 		public static final String format_Date = "yyyy/MM/dd HH:mm:ss.SSS";
 
-		// status
-		public static int status;
-		public static int status_C;
-		public static int status_B;
-		
 		public final static String str_Status = "Status = ";
 		
-		public static enum Orien {
+		public static enum RGBNames {
 			
-			HH, HV, VH, VV,
-//			HORI_HORI, HORI_VERTI,
-//			VERTI_VERTI, VERTI_HORI,
+			RED, GREEN, BLUE,
 			
-			INITIAL, NEXT_NODE, PREV_NODE,
-			
-			HH_, HV_,
-			VV_, VH_,
-			
-			INIT, NN, PN,	// NN => next node; PN => prev node
+			ALL,
 			
 		}
-		
-		public static enum NodeNames {
-			
-			B_UL, B_UR, B_LL, B_LR,
-			A_UL, A_UR, A_LL, A_LR,
-			C_UL, C_UR, C_LL, C_LR,
-		}
-		
-		/*******************************
-
-			UPPER => the line IS occupied at the upper part with the rectangles
-
-		 *******************************/
-		public static enum LineStates {
-			
-			MIDDLE_X, MIDDLE_Y,
-			BOTH_Y, BOTH_X,
-			UPPER, LOWER,
-			LEFT, RIGHT,
-			NONE, MATCH, UNKNOWN,
-			
-		}
-		
-		public static enum Lines {
-			
-			LX1, LX2, LY1, LY2,
-			
-		}
-		
-		public static enum CornerTypes {
-			
-			IN_CORNER, OUT_CORNER,
-			IN_CORNER_A, IN_CORNER_B, IN_CORNER_C, IN_CORNER_X,
-			
-		}
-		
-		public static Orien orien_Current_C;
-		public static Orien orien_Current_B;
-		
-		public static int node_Current;
-		public static int node_Current_B;
-		
-		public static List<NodeNames> list_NodeNames_C;
-		
-		public static List<NodeNames> list_NodeNames_B;
-		
-		public static final int numOf_Positions_per_Node = 4;
 		
 		
 	}

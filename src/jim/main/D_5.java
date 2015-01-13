@@ -14,6 +14,7 @@ import java.util.Locale;
 import javax.imageio.ImageIO;
 
 import jim.utils.CONS;
+import jim.utils.CONS.Admin.RGBNames;
 import jim.utils.Methods;
 
 import org.eclipse.swt.events.PaintListener;
@@ -354,6 +355,11 @@ public class D_5 {
 	show_RGB_values(int x, int y) {
 		// TODO Auto-generated method stub
 
+		////////////////////////////////
+
+		// prep: data
+
+		////////////////////////////////
 		ImageData data = image.getImageData();
 
 		int w_Image = data.width;
@@ -557,16 +563,39 @@ public class D_5 {
 		Menu menu_2 = new Menu(menu_Options);
 		menu_Options.setMenu(menu_2);
 		
-		MenuItem mi_ShowRGB = new MenuItem(menu_2, SWT.NONE);
-		mi_ShowRGB.addSelectionListener(new SelectionAdapter() {
+		MenuItem mi_ShowR = new MenuItem(menu_2, SWT.NONE);
+		mi_ShowR.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				D_5.this.show_RGB();
+				D_5.this.show_RGB(CONS.Admin.RGBNames.RED);
+//				D_5.this.show_RGB();
 				
 			}
 		});
-		mi_ShowRGB.setText("Show &RGB");
+		mi_ShowR.setText("Show &R");
+		
+		MenuItem mi_ShowG = new MenuItem(menu_2, SWT.NONE);
+		mi_ShowG.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				D_5.this.show_RGB(CONS.Admin.RGBNames.GREEN);
+				
+			}
+		});
+		mi_ShowG.setText("Show &G");
+		
+		MenuItem mi_ShowB = new MenuItem(menu_2, SWT.NONE);
+		mi_ShowB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				D_5.this.show_RGB(CONS.Admin.RGBNames.BLUE);
+				
+			}
+		});
+		mi_ShowB.setText("Show &B");
 		
 		Group gr_Controls = new Group(shell, SWT.BORDER | SWT.SHADOW_ETCHED_OUT);
 		gr_Controls.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -630,7 +659,7 @@ public class D_5 {
 	}
 
 	protected void 
-	show_RGB() {
+	show_RGB(RGBNames rgb_Name) {
 		// TODO Auto-generated method stub
 	
 		//log
@@ -694,7 +723,8 @@ public class D_5 {
 		numOf_Shells ++;
 
 		
-		sh.draw_RGB();
+		sh.draw_RGB(rgb_Name);
+//		sh.draw_RGB(CONS.Admin.RGBNames.BLUE);
 		
 //		Shell shell_RGB = new Shell(Display.getCurrent());
 //		
@@ -703,7 +733,7 @@ public class D_5 {
 //		shell_RGB.open();
 		
 		
-	}
+	}//show_RGB
 
 	protected void 
 	open_FileChooser() {

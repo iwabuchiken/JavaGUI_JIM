@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.Locale;
 
 import jim.utils.CONS;
+import jim.utils.CONS.Admin.RGBNames;
 import jim.utils.Methods;
 
 import org.eclipse.swt.SWT;
@@ -22,6 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ShellRGB extends Shell {
 
@@ -117,6 +119,7 @@ public class ShellRGB extends Shell {
 		mntmQuit.setText("&Quit");
 		
 		canvas = new Canvas(this, SWT.NONE);
+		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 		canvas.setBounds(10, 10, 500, 370);
 		
 		lbl_FilePath = new Label(this, SWT.NONE);
@@ -201,7 +204,7 @@ public class ShellRGB extends Shell {
 		
 	}
 
-	void draw_RGB() {
+	void draw_RGB(RGBNames rgb_Name) {
 		
 		////////////////////////////////
 
@@ -214,6 +217,8 @@ public class ShellRGB extends Shell {
 
 		Image image = null;
 		
+		int canvas_H = this.canvas.getSize().y;
+		
 		try {
 	  	  
 			image = new Image(this.disp, new FileInputStream(f));
@@ -225,10 +230,51 @@ public class ShellRGB extends Shell {
 			////////////////////////////////
 			ImageData data = image.getImageData();
 			
-			int[] pixData_R = Methods.get_PixData_R(image);
+			int[] pixData_R = Methods.get_PixData_R(image, rgb_Name);
+//			int[] pixData_R = Methods.get_PixData_R(image, CONS.Admin.RGBNames.RED);
+//			int[] pixData_R = Methods.get_PixData_R(image);
 			
 			int w = image.getImageData().width;
 			int h = image.getImageData().height;
+			
+			GC gc = new GC(this.canvas);
+			
+			gc.setBackground(blue_light); 
+			
+			//REF http://www.java2s.com/Tutorial/Java/0300__SWT-2D-Graphics/DrawingPointsLinesandsetlinewidth.htm
+			gc.setLineWidth(CONS.Views.lineWidth_Rect);
+
+			////////////////////////////////
+
+			// line color
+
+			////////////////////////////////
+			Color color = null;
+			
+			switch(rgb_Name) {
+			
+			case RED: color = this.red; break;
+			case GREEN: color = this.green; break;
+			case BLUE: color = this.blue; break;
+			
+			}
+			
+//			gc.setBackground(setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW)););
+			gc.setBackground(color);
+			gc.setForeground(color);
+			
+			for (int i = 0; i < pixData_R.length; i++) {
+				
+				gc.drawLine(i, (canvas_H - pixData_R[i]), i, canvas_H);
+//				gc.drawLine(i, 0, i, pixData_R[i]);
+				
+			}
+			
+//			gc.fillRectangle(x, y, w, h);
+//			gc.drawRectangle(10, 10, 100, 100);
+			
+			gc.dispose();
+
 			
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
