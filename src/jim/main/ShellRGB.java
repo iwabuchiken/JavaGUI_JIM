@@ -440,6 +440,12 @@ public class ShellRGB extends Shell {
 			
 			int rgb_IntVals[] = new int[3];
 			
+			int scaling;
+			
+			max_Height = Methods.get_Max(pixData_R, pixData_G, pixData_B);
+			
+			scaling = canvas_H / max_Height;
+			
 			for (int i = 0; i < pixData_R.length; i++) {
 
 //				////////////////////////////////
@@ -457,11 +463,19 @@ public class ShellRGB extends Shell {
 //					
 //				}
 //				
-				max_Height = Methods.get_Max(pixData_R, pixData_G, pixData_B);
+//				max_Height = Methods.get_Max(pixData_R, pixData_G, pixData_B);
 				
-				for (int j = 0; j < max_Height; j++) {
+//				scaling = canvas_H / max_Height;
+				
+				for (int j = 0; j < canvas_H; j++) {
+//					for (int j = 0; j < max_Height; j++) {
 
-					rgb_IntVals = Methods.get_RGB_IntVals(pixData_R[i], pixData_G[i], pixData_B[i], j);
+					rgb_IntVals = Methods.get_RGB_IntVals(
+									pixData_R[i] * scaling, 
+									pixData_G[i] * scaling, 
+									pixData_B[i] * scaling, 
+									j);
+//					rgb_IntVals = Methods.get_RGB_IntVals(pixData_R[i], pixData_G[i], pixData_B[i], j);
 					
 					gc.setForeground(SWTResourceManager.getColor(
 							rgb_IntVals[0], rgb_IntVals[1], rgb_IntVals[2]));
