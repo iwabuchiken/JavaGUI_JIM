@@ -230,7 +230,7 @@ public class ShellRGB extends Shell {
 			////////////////////////////////
 			ImageData data = image.getImageData();
 			
-			int[] pixData_R = Methods.get_PixData_R(image, rgb_Name);
+			int[] pixData_R = Methods.get_PixData(image, rgb_Name);
 //			int[] pixData_R = Methods.get_PixData_R(image, CONS.Admin.RGBNames.RED);
 //			int[] pixData_R = Methods.get_PixData_R(image);
 			
@@ -244,7 +244,7 @@ public class ShellRGB extends Shell {
 			gc.setBackground(blue_light); 
 			
 			//REF http://www.java2s.com/Tutorial/Java/0300__SWT-2D-Graphics/DrawingPointsLinesandsetlinewidth.htm
-			gc.setLineWidth(CONS.Views.lineWidth_Rect);
+			gc.setLineWidth(CONS.Views.lineWidth_Std);
 
 			////////////////////////////////
 
@@ -312,6 +312,151 @@ public class ShellRGB extends Shell {
 		
 	}
 
+	void draw_RGB() {
+		
+		////////////////////////////////
+		
+		// image
+		
+		////////////////////////////////
+		String fpath_Image = this.file_Path;
+		
+		File f = new File(fpath_Image);
+		
+		Image image = null;
+		
+		int canvas_H = this.canvas.getSize().y;
+		
+		try {
+			
+			image = new Image(this.disp, new FileInputStream(f));
+			
+			////////////////////////////////
+			
+			// prep: data
+			
+			////////////////////////////////
+			ImageData data = image.getImageData();
+			
+			CONS.Admin.RGBNames rgb_Name = CONS.Admin.RGBNames.RED;
+			
+			int[] pixData_R = Methods.get_PixData_AllLines(image, rgb_Name);
+			int[] pixData_G = Methods.get_PixData_AllLines(image, CONS.Admin.RGBNames.GREEN);
+			int[] pixData_B = Methods.get_PixData_AllLines(image, CONS.Admin.RGBNames.BLUE);
+			
+			//log
+			String text, fname; int line_Num;
+			
+			text = String.format(Locale.JAPAN, "pixData_R.length => %d\n", pixData_R.length);
+			
+			fname = Thread.currentThread().getStackTrace()[1].getFileName();
+			
+			line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+			
+			System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+			int w = image.getImageData().width;
+			int h = image.getImageData().height;
+			
+			int max_Pixel_Value = Methods.get_Max(pixData_R, pixData_G, pixData_B);
+			
+			////////////////////////////////
+
+			// gc
+
+			////////////////////////////////
+			GC gc = new GC(this.canvas);
+			
+			gc.setBackground(blue_light); 
+			
+			//REF http://www.java2s.com/Tutorial/Java/0300__SWT-2D-Graphics/DrawingPointsLinesandsetlinewidth.htm
+			gc.setLineWidth(CONS.Views.lineWidth_Std);
+			
+			////////////////////////////////
+			
+			// line color
+			
+			////////////////////////////////
+			Color color = null;
+			
+			int modified_Height;
+			
+			int max_Height;
+
+			////////////////////////////////
+			
+			// matrix lines
+			
+			////////////////////////////////
+			for (int i = 0; i < pixData_R.length; i++) {
+
+				if (i % 100 == 0) {
+					
+					gc.setLineWidth(CONS.Views.lineWidth_Matrix);
+					
+					gc.setForeground(SWTResourceManager.getColor(50, 50, 50));
+					
+					gc.drawLine(i, 0, i, canvas_H);
+					
+					gc.setForeground(SWTResourceManager.getColor(100, 100, 0));
+					
+					//log
+					text = String.format(Locale.JAPAN, "matrix: i = %d\n", i);
+					
+					fname = Thread.currentThread().getStackTrace()[1].getFileName();
+					
+					line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+					
+					System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+
+				}
+				
+
+			}
+			
+			////////////////////////////////
+
+			// rgb
+
+			////////////////////////////////
+			gc.setLineWidth(CONS.Views.lineWidth_Std);
+			
+			int rgb_IntVals[] = new int[3];
+			
+			float scaling;
+			
+			max_Height = Methods.get_Max(pixData_R, pixData_G, pixData_B);
+			
+			scaling = (float)canvas_H / max_Height;
+			
+			for (int i = 0; i < pixData_R.length; i++) {
+
+				for (int j = 0; j < canvas_H; j++) {
+
+					rgb_IntVals = Methods.get_RGB_IntVals(
+									(int)(pixData_R[i] * scaling), 
+									(int)(pixData_G[i] * scaling), 
+									(int)(pixData_B[i] * scaling), 
+									j);
+					
+					gc.setForeground(SWTResourceManager.getColor(
+							rgb_IntVals[0], rgb_IntVals[1], rgb_IntVals[2]));
+					
+					gc.drawPoint(i, canvas_H - j);
+					
+				}
+
+			}
+			
+			gc.dispose();
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+	}
+	
 	private void 
 	init_Colors() {
 		// TODO Auto-generated method stub
