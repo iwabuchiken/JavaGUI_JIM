@@ -53,7 +53,9 @@ public class CONS {
 		// rect
 
 		////////////////////////////////
-		public static final int lineWidth_Rect = 5;
+		public static final int lineWidth_Std = 5;
+
+		public static int lineWidth_Matrix = 2;
 		
 		////////////////////////////////
 
@@ -118,7 +120,7 @@ public class CONS {
 		
 		public static int peri_W;
 		public static int peri_H;
-		
+
 	}//public static class Views
 	
 	public static class Strings {

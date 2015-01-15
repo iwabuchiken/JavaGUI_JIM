@@ -723,7 +723,8 @@ public class D_5 {
 		numOf_Shells ++;
 
 		
-		sh.draw_RGB(rgb_Name);
+		sh.draw_RGB();
+//		sh.draw_RGB(rgb_Name);
 //		sh.draw_RGB(CONS.Admin.RGBNames.BLUE);
 		
 //		Shell shell_RGB = new Shell(Display.getCurrent());
