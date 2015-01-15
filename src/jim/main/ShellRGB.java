@@ -340,9 +340,9 @@ public class ShellRGB extends Shell {
 			
 			CONS.Admin.RGBNames rgb_Name = CONS.Admin.RGBNames.RED;
 			
-			int[] pixData_R = Methods.get_PixData(image, rgb_Name);
-			int[] pixData_G = Methods.get_PixData(image, CONS.Admin.RGBNames.GREEN);
-			int[] pixData_B = Methods.get_PixData(image, CONS.Admin.RGBNames.BLUE);
+			int[] pixData_R = Methods.get_PixData_AllLines(image, rgb_Name);
+			int[] pixData_G = Methods.get_PixData_AllLines(image, CONS.Admin.RGBNames.GREEN);
+			int[] pixData_B = Methods.get_PixData_AllLines(image, CONS.Admin.RGBNames.BLUE);
 			
 			//log
 			String text, fname; int line_Num;
@@ -379,34 +379,17 @@ public class ShellRGB extends Shell {
 			////////////////////////////////
 			Color color = null;
 			
-//			switch(rgb_Name) {
-//			
-//			case RED: color = this.red; break;
-//			case GREEN: color = this.green; break;
-//			case BLUE: color = this.blue; break;
-//			
-//			}
-			
-//			gc.setBackground(setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW)););
-//			gc.setBackground(color);
-//			gc.setForeground(color);
-			
 			int modified_Height;
 			
 			int max_Height;
 
-//			//test
-//			gc.setForeground(SWTResourceManager.getColor(255, 255, 0));
-//			
-//			gc.drawLine(50, 0, 50, canvas_H);
+			////////////////////////////////
 			
+			// matrix lines
+			
+			////////////////////////////////
 			for (int i = 0; i < pixData_R.length; i++) {
 
-				////////////////////////////////
-
-				// matrix liines
-
-				////////////////////////////////
 				if (i % 100 == 0) {
 					
 					gc.setLineWidth(CONS.Views.lineWidth_Matrix);
@@ -440,54 +423,28 @@ public class ShellRGB extends Shell {
 			
 			int rgb_IntVals[] = new int[3];
 			
-			int scaling;
+			float scaling;
 			
 			max_Height = Methods.get_Max(pixData_R, pixData_G, pixData_B);
 			
-			scaling = canvas_H / max_Height;
+			scaling = (float)canvas_H / max_Height;
 			
 			for (int i = 0; i < pixData_R.length; i++) {
 
-//				////////////////////////////////
-//
-//				// matrix liines
-//
-//				////////////////////////////////
-//				if (i % 100 == 0) {
-//					
-//					gc.setForeground(SWTResourceManager.getColor(200, 200, 200));
-//					
-//					gc.drawLine(i, 0, i, canvas_H);
-//					
-//					gc.setForeground(SWTResourceManager.getColor(100, 100, 0));
-//					
-//				}
-//				
-//				max_Height = Methods.get_Max(pixData_R, pixData_G, pixData_B);
-				
-//				scaling = canvas_H / max_Height;
-				
 				for (int j = 0; j < canvas_H; j++) {
-//					for (int j = 0; j < max_Height; j++) {
 
 					rgb_IntVals = Methods.get_RGB_IntVals(
-									pixData_R[i] * scaling, 
-									pixData_G[i] * scaling, 
-									pixData_B[i] * scaling, 
+									(int)(pixData_R[i] * scaling), 
+									(int)(pixData_G[i] * scaling), 
+									(int)(pixData_B[i] * scaling), 
 									j);
-//					rgb_IntVals = Methods.get_RGB_IntVals(pixData_R[i], pixData_G[i], pixData_B[i], j);
 					
 					gc.setForeground(SWTResourceManager.getColor(
 							rgb_IntVals[0], rgb_IntVals[1], rgb_IntVals[2]));
-//					gc.setForeground(SWTResourceManager.getColor(100, 100, 0));
 					
 					gc.drawPoint(i, canvas_H - j);
 					
 				}
-
-//				modified_Height = (int) (canvas_H * ((float)pixData_R[i] / max_Pixel_Value));
-//				
-//				gc.drawLine(i, (canvas_H - modified_Height), i, canvas_H);
 
 			}
 			
@@ -497,28 +454,6 @@ public class ShellRGB extends Shell {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		
-//		GC gc = new GC(this.canvas);
-//		
-////		gc.setForeground(display.getSystemColor(SWT.COLOR_CYAN)); 
-//		
-//		//REF http://stackoverflow.com/questions/50064/setting-colors-in-swt answered Sep 8 '08 at 16:49
-////		Device device = Display.getCurrent ();
-////		Color red = new Color (device, 255, 0, 0);
-//		
-////		gc.setBackground(this.burlywood2); 
-//		gc.setBackground(blue_light); 
-//		
-//		//REF http://www.java2s.com/Tutorial/Java/0300__SWT-2D-Graphics/DrawingPointsLinesandsetlinewidth.htm
-//		gc.setLineWidth(CONS.Views.lineWidth_Rect);
-//		
-////		gc.fillRectangle(x, y, w, h);
-//		gc.drawRectangle(10, 10, 100, 100);
-//		
-//		gc.dispose();
-//
-//		
 		
 	}
 	

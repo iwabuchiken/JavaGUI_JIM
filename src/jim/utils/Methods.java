@@ -101,17 +101,17 @@ public class Methods {
 		
 		int count = 0;
 		
-		//log
+//		//log
 		String text, fname; int line_Num;
-		
-		//log
-		text = String.format(Locale.JAPAN, "pixels.length = %d\n", pixels.length);
-		
-		fname = Thread.currentThread().getStackTrace()[1].getFileName();
-		
-		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
-		
-		System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+//		
+//		//log
+//		text = String.format(Locale.JAPAN, "pixels.length = %d\n", pixels.length);
+//		
+//		fname = Thread.currentThread().getStackTrace()[1].getFileName();
+//		
+//		line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+//		
+//		System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
 
 		////////////////////////////////
 
@@ -177,6 +177,116 @@ public class Methods {
 		
 	}//get_PixData_R
 
+	public static int[] 
+	get_PixData_AllLines(Image image, RGBNames rgb_Name) {
+		// TODO Auto-generated method stub
+		
+		////////////////////////////////
+		
+		// prep: data
+		
+		////////////////////////////////
+		ImageData data = image.getImageData();
+		
+		int w_Image = data.width;
+		int h_Image = data.height;
+		
+		int[] pixels = new int[w_Image];
+		
+		PaletteData palette = null;
+		RGB rgb = null;
+		
+		int limit = 50;
+		
+		int count = 0;
+
+		int pixels_Values[] = null;
+				
+		////////////////////////////////
+		
+		// get: pixel value array
+		
+		////////////////////////////////
+		pixels_Values = new int[w_Image];
+		
+		int i, j;
+		
+		for (i = 0; i < h_Image; i++) {
+			
+			data.getPixels(0, i, w_Image, pixels, 0);
+		
+//			pixels_Values = new int[pixels.length];
+			
+			for (j = 0; j < pixels.length; j++) {
+				
+				palette = data.palette; 
+				
+				rgb = palette.getRGB(pixels[j]);
+				
+				////////////////////////////////
+				
+				// get: values
+				
+				////////////////////////////////
+				switch(rgb_Name) {
+				
+				case RED: pixels_Values[rgb.red] ++; break;
+				case GREEN: pixels_Values[rgb.green] ++; break;
+				case BLUE: pixels_Values[rgb.blue] ++; break;
+				
+				}
+				
+			}
+			
+		}//for (int i = 0; i < h_Image; i++)
+		
+//		pixels_Values = new int[pixels.length];
+//		
+//		for (int i = 0; i < pixels.length; i++) {
+//			
+//			palette = data.palette; 
+//			
+//			rgb = palette.getRGB(pixels[i]);
+//			
+//			////////////////////////////////
+//			
+//			// get: values
+//			
+//			////////////////////////////////
+//			switch(rgb_Name) {
+//			
+//			case RED: pixels_Values[rgb.red] ++; break;
+//			case GREEN: pixels_Values[rgb.green] ++; break;
+//			case BLUE: pixels_Values[rgb.blue] ++; break;
+//			
+//			}
+//			
+//		}
+//		
+		////////////////////////////////
+		
+		// report
+		
+		////////////////////////////////
+		for (i = 0; i < pixels_Values.length; i++) {
+			
+			//log
+			String text, fname; int line_Num;
+
+			text = String.format(Locale.JAPAN, "pixels_R[%d] => %d\n", i, pixels_Values[i]);
+			
+			fname = Thread.currentThread().getStackTrace()[1].getFileName();
+			
+			line_Num = Thread.currentThread().getStackTrace()[1].getLineNumber();
+			
+			System.out.format(Locale.JAPAN, "[%s:%d] %s", fname, line_Num, text);
+			
+		}
+		
+		return pixels_Values;
+		
+	}//get_PixData_R
+	
 	public static int 
 	get_Max(int[] pixData_R) {
 		
